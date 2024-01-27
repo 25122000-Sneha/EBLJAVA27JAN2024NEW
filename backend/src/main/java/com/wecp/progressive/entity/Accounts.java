@@ -1,44 +1,44 @@
 package com.wecp.progressive.entity;
 
-public class Accounts implements Comparable<Accounts>{
-    private int account_id;
-    private int customer_id;
+public class Accounts {
+
+    private int accountId;
+    private int customerId;
     private double balance;
-    public Accounts(){}
-    
-    public Accounts(int account_id, int customer_id, double balance) {
-        this.account_id = account_id;
-        this.customer_id = customer_id;
+
+    public Accounts() {
+        // constrcutor
+    }
+
+    public Accounts(int accountId, int customerId, double balance) {
+        this.accountId = accountId;
+        this.customerId = customerId;
         this.balance = balance;
     }
 
-    public int getAccount_id() {
-        return account_id;
+    // Getters and setters
+    public int getAccountId() {
+        return accountId;
     }
-    public void setAccount_id(int account_id) {
-        this.account_id = account_id;
+
+    public void setAccountId(int accountId) {
+        this.accountId = accountId;
     }
-    public int getCustomer_id() {
-        return customer_id;
+
+    public int getCustomerId() {
+        return customerId;
     }
-    public void setCustomer_id(int customer_id) {
-        this.customer_id = customer_id;
+
+    public void setCustomerId(int customerId) {
+        this.customerId = customerId;
     }
+
     public double getBalance() {
         return balance;
     }
+
     public void setBalance(double balance) {
         this.balance = balance;
     }
-    @Override 
-    public int compareTo(Accounts that)
-    {
-        return Double.compare(this.balance, that.balance);
-    }
-    @Override
-    public String toString() 
-    {
-        return this.account_id+"  "+this.customer_id+"  "+this.balance;
-    }
-   
+
 }
