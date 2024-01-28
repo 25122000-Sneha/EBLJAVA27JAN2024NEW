@@ -22,21 +22,27 @@ public class CustomerServiceImpl implements CustomerService {
     @Override
     public List<Customers> getAllCustomers() throws SQLException {
         return customerDAO.getAllCustomers();
+       
+
     }
 
     @Override
     public Customers getCustomerById(int customerId) throws SQLException {
         return customerDAO.getCustomerById(customerId);
+       
+
     }
 
     @Override
     public int addCustomer(Customers customers) throws SQLException {
         return customerDAO.addCustomer(customers);
+       
     }
 
     @Override
     public void updateCustomer(Customers customers) throws SQLException {
         customerDAO.updateCustomer(customers);
+
     }
 
     @Override
