@@ -1,6 +1,7 @@
 package com.wecp.progressive.service;
 
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -14,14 +15,13 @@ import com.wecp.progressive.repository.CustomerRepository;
 @Service
 public class CustomerServiceImplJpa implements CustomerService{
     
-    @Autowired
-    private CustomerRepository customerRepository;
+    private List<Customers> list = new ArrayList<>();
 
     @Override
     public List<Customers> getAllCustomers() throws SQLException {
         // TODO Auto-generated method stub
         //throw new UnsupportedOperationException("Unimplemented method 'getAllCustomers'");
-        return customerRepository.findAll();
+        return null;
     }
 
     @Override
@@ -35,7 +35,6 @@ public class CustomerServiceImplJpa implements CustomerService{
     public int addCustomer(Customers customers) throws SQLException {
         // TODO Auto-generated method stub
         //throw new UnsupportedOperationException("Unimplemented method 'addCustomer'");
-        customerRepository.save(customers);
         return -1;
     }
 
@@ -50,14 +49,13 @@ public class CustomerServiceImplJpa implements CustomerService{
     public void deleteCustomer(int customerId) throws SQLException {
         // TODO Auto-generated method stub
         //throw new UnsupportedOperationException("Unimplemented method 'deleteCustomer'");
-        customerRepository.deleteById(customerId);
     }
 
     @Override
     public List<Customers> getAllCustomersSortedByName() throws SQLException {
         // TODO Auto-generated method stub
        // throw new UnsupportedOperationException("Unimplemented method 'getAllCustomersSortedByName'");
-       List<Customers> sortedList = customerRepository.findAll();
+       List<Customers> sortedList = list;
        Collections.sort(sortedList);
        return sortedList;
     }
@@ -66,16 +64,14 @@ public class CustomerServiceImplJpa implements CustomerService{
     public List<Customers> getAllCustomersFromArrayList() {
         // TODO Auto-generated method stub
        // throw new UnsupportedOperationException("Unimplemented method 'getAllCustomersFromArrayList'");
-       List<Customers> arr = customerRepository.findAll();
-       return arr;
+       return list;
     }
 
     @Override
     public List<Customers> addCustomersToArrayList(Customers customers) {
         // TODO Auto-generated method stub
         //throw new UnsupportedOperationException("Unimplemented method 'addCustomersToArrayList'");
-        Customers c = customerRepository.save(customers);
-        List<Customers> list = customerRepository.findAll();
+        list.add(customers);
         return list;
 
     }
@@ -84,7 +80,7 @@ public class CustomerServiceImplJpa implements CustomerService{
     public List<Customers> getAllCustomersSortedByNameFromArrayList() {
         // TODO Auto-generated method stub
         //throw new UnsupportedOperationException("Unimplemented method 'getAllCustomersSortedByNameFromArrayList'");
-        List<Customers> list = customerRepository.findAll();
+        List<Customers> sortedList = list;
         Collections.sort(list);
         return list;
     }

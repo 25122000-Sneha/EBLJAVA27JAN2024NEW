@@ -13,6 +13,14 @@ import org.springframework.web.bind.annotation.*;
 import java.sql.SQLException;
 import java.util.List;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+
+
+
 
 
 
@@ -36,11 +44,11 @@ public class CustomerController {
         
     }
 
-    @GetMapping("/customers/{customerId}")
-    public ResponseEntity<Customers> getCustomerById(@PathVariable int customerId) {
+    @GetMapping("/customers/{customerID}")
+    public ResponseEntity<Customers> getCustomerById(@PathVariable int customerID) {
         try 
         {
-            Customers c = customerService.getCustomerById(customerId);
+            Customers c = customerService.getCustomerById(customerID);
             if(c == null)
             {
                 return new ResponseEntity<Customers>(c, HttpStatus.NOT_FOUND);
@@ -53,11 +61,13 @@ public class CustomerController {
         }
         catch(SQLException e)
         {
-            return null;
+            e.printStackTrace();
         }
+        return null;
     }
 
-    public ResponseEntity<Integer> addCustomer(Customers customers) {
+    @PostMapping("/customers")
+    public ResponseEntity<Integer> addCustomer(@RequestBody Customers customers) {
         try 
         {
             customerService.addCustomer(customers);
@@ -72,13 +82,23 @@ public class CustomerController {
         
     }
 
-    public ResponseEntity<Void> updateCustomer(int customerId, Customers customers) {
-        return null;
+    @PutMapping("/customers/{customerID}")
+    public ResponseEntity<Void> updateCustomer(@RequestBody Customers customers) {
+        try {
+            customerService.updateCustomer(customers);
+           
+        } catch (SQLException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        return new ResponseEntity<Void>(HttpStatus.OK);
     }
-    public ResponseEntity<Void> deleteCustomer(int customerId) {
+
+    @DeleteMapping("/customers/{customerID}")
+    public ResponseEntity<Void> deleteCustomer(@PathVariable int customerID) {
         try 
         {
-            customerService.deleteCustomer(customerId);
+            customerService.deleteCustomer(customerID);
             return new ResponseEntity<Void>(HttpStatus.OK);
         }
         catch(SQLException e)
@@ -92,4 +112,29 @@ public class CustomerController {
     public ResponseEntity<List<Transactions>> getAllTransactionsByCustomerId(int cutomerId) {
         return null;
     }
+
+    @GetMapping("/customers/fromArrayList")
+    public ResponseEntity<List<Customers>> getAllCustomersFromArraylist()
+    {
+        List<Customers> list = customerService.getAllCustomersFromArrayList();
+        return new ResponseEntity<>(list, HttpStatus.OK);
+    }
+
+    @PostMapping("/customers/toArrayList")
+    public List<Customers> addCustomersToArrayList(Customers customers)
+    {
+        List<Customers> list = customerService.addCustomersToArrayList(customers);
+        return list;
+    }
+
+    @GetMapping("/customers/fromArrayList/{customerId}")
+    public List<Customers> getAllCustomersSortedByNameFromArrayList()
+
+    {
+        List<Customers> list = customerService.getAllCustomersSortedByNameFromArrayList();
+        return list;
+    }
+
+
+
 }
