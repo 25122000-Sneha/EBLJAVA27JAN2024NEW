@@ -18,6 +18,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+
 
 
 
@@ -25,12 +28,13 @@ import org.springframework.web.bind.annotation.PathVariable;
 
 
 @RestController
+@RequestMapping("/customers")
 public class CustomerController {
 
     @Autowired
     private CustomerService customerService;
 
-    @GetMapping("/customers")
+    @GetMapping
     public ResponseEntity<List<Customers>> getAllCustomers() {
         try
         {
@@ -39,24 +43,18 @@ public class CustomerController {
         }
         catch(SQLException e)
         {
-            return null;
+            e.printStackTrace();
         }
+        return null;
         
     }
 
-    @GetMapping("/customers/{customerID}")
+    @GetMapping("/{customerID}")
     public ResponseEntity<Customers> getCustomerById(@PathVariable int customerID) {
         try 
         {
             Customers c = customerService.getCustomerById(customerID);
-            if(c == null)
-            {
-                return new ResponseEntity<Customers>(c, HttpStatus.NOT_FOUND);
-            }
-            else 
-            {
-                return new ResponseEntity<Customers>(c, HttpStatus.OK);
-            }
+            return new ResponseEntity<Customers>(c, HttpStatus.OK);
 
         }
         catch(SQLException e)
@@ -66,7 +64,7 @@ public class CustomerController {
         return null;
     }
 
-    @PostMapping("/customers")
+    @PostMapping
     public ResponseEntity<Integer> addCustomer(@RequestBody Customers customers) {
         try 
         {
@@ -82,7 +80,7 @@ public class CustomerController {
         
     }
 
-    @PutMapping("/customers/{customerID}")
+    @PutMapping("/{customerID}")
     public ResponseEntity<Void> updateCustomer(@RequestBody Customers customers) {
         try {
             customerService.updateCustomer(customers);
@@ -94,7 +92,7 @@ public class CustomerController {
         return new ResponseEntity<Void>(HttpStatus.OK);
     }
 
-    @DeleteMapping("/customers/{customerID}")
+    @DeleteMapping("/{customerID}")
     public ResponseEntity<Void> deleteCustomer(@PathVariable int customerID) {
         try 
         {
@@ -113,21 +111,21 @@ public class CustomerController {
         return null;
     }
 
-    @GetMapping("/customers/fromArrayList")
+    @GetMapping("/fromArrayList")
     public ResponseEntity<List<Customers>> getAllCustomersFromArraylist()
     {
         List<Customers> list = customerService.getAllCustomersFromArrayList();
         return new ResponseEntity<>(list, HttpStatus.OK);
     }
 
-    @PostMapping("/customers/toArrayList")
+    @PostMapping("/toArrayList")
     public List<Customers> addCustomersToArrayList(Customers customers)
     {
         List<Customers> list = customerService.addCustomersToArrayList(customers);
         return list;
     }
 
-    @GetMapping("/customers/fromArrayList/{customerId}")
+    @GetMapping("/fromArrayList/{customerId}")
     public List<Customers> getAllCustomersSortedByNameFromArrayList()
 
     {

@@ -4,6 +4,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import com.wecp.progressive.entity.Customers;
 
-public interface CustomerRepository{
-
+public interface CustomerRepository extends JpaRepository<Customers, Integer>{
+    Customers findByCustomerId(int id);
 }

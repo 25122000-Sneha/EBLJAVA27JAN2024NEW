@@ -17,31 +17,37 @@ public class CustomerServiceImplJpa implements CustomerService{
     
     private List<Customers> list = new ArrayList<>();
 
+    @Autowired
+    private CustomerRepository customerRepository;
+
+
     @Override
     public List<Customers> getAllCustomers() throws SQLException {
         // TODO Auto-generated method stub
         //throw new UnsupportedOperationException("Unimplemented method 'getAllCustomers'");
-        return null;
+        return customerRepository.findAll();
     }
 
     @Override
     public Customers getCustomerById(int customerId) throws SQLException {
         // TODO Auto-generated method stub
         //throw new UnsupportedOperationException("Unimplemented method 'getCustomerById'");
-        return null;
+        return customerRepository.findByCustomerId(customerId);
     }
 
     @Override
     public int addCustomer(Customers customers) throws SQLException {
         // TODO Auto-generated method stub
         //throw new UnsupportedOperationException("Unimplemented method 'addCustomer'");
-        return -1;
+        return customerRepository.save(customers).getCustomerId();
+        
     }
 
     @Override
     public void updateCustomer(Customers customers) throws SQLException {
         // TODO Auto-generated method stub
        // throw new UnsupportedOperationException("Unimplemented method 'updateCustomer'");
+       customerRepository.save(customers);
 
     }
 
@@ -49,6 +55,7 @@ public class CustomerServiceImplJpa implements CustomerService{
     public void deleteCustomer(int customerId) throws SQLException {
         // TODO Auto-generated method stub
         //throw new UnsupportedOperationException("Unimplemented method 'deleteCustomer'");
+        customerRepository.deleteById(customerId);
     }
 
     @Override
@@ -89,6 +96,7 @@ public class CustomerServiceImplJpa implements CustomerService{
     public void emptyArrayList() {
         // TODO Auto-generated method stub
         //throw new UnsupportedOperationException("Unimplemented method 'emptyArrayList'");
+        list.clear();
         
     }
 
