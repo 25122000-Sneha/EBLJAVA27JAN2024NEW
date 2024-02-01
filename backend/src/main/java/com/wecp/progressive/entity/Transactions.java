@@ -1,27 +1,36 @@
 package com.wecp.progressive.entity;
+
 import java.util.Date;
+
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.ManyToOne;
+
 
 public class Transactions {
 
+    
     private int transactionId;
-    private int accountId;
+
+    @ManyToOne
+    private Accounts accounts;
+
     private double amount;
-    private String transactionType;
     private Date transactionDate;
+    private String transactionType;
 
     public Transactions() {
-        //
     }
 
-    public Transactions(int transactionId, int accountId, double amount, Date timestamp, String transactionType) {
-        this.transactionId = transactionId;
-        this.accountId = accountId;
+    public Transactions(Accounts accounts, double amount, Date transactionDate, String transactionType) {
+        this.accounts = accounts;
         this.amount = amount;
-        this.transactionDate = timestamp;
+        this.transactionDate = transactionDate;
         this.transactionType = transactionType;
     }
 
-    // Getters and setters
     public int getTransactionId() {
         return transactionId;
     }
@@ -30,12 +39,12 @@ public class Transactions {
         this.transactionId = transactionId;
     }
 
-    public int getAccountId() {
-        return accountId;
+    public Accounts getAccounts() {
+        return accounts;
     }
 
-    public void setAccountId(int accountId) {
-        this.accountId = accountId;
+    public void setAccounts(Accounts accounts) {
+        this.accounts = accounts;
     }
 
     public double getAmount() {
@@ -61,4 +70,5 @@ public class Transactions {
     public void setTransactionType(String transactionType) {
         this.transactionType = transactionType;
     }
+
 }

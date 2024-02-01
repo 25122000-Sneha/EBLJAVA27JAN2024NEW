@@ -15,8 +15,6 @@ public class CustomerAccountInfo {
         this.balance = balance;
     }
 
-    // Getters and setters (or you can make fields public if preferred)
-
     public int getCustomerId() {
         return customerId;
     }

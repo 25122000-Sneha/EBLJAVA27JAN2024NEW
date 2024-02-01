@@ -1,20 +1,16 @@
 package com.wecp.progressive.service;
 
-
-import com.wecp.progressive.dao.AccountDAO;
-import com.wecp.progressive.dao.AccountDAOImpl;
-import com.wecp.progressive.dao.TransactionDAO;
-import com.wecp.progressive.entity.Accounts;
-import com.wecp.progressive.entity.Transactions;
-import com.wecp.progressive.exception.AccountNotFoundException;
-import com.wecp.progressive.exception.OutOfBalanceException;
-
 import java.sql.SQLException;
 import java.util.List;
 
+import com.wecp.progressive.dao.TransactionDAO;
+import com.wecp.progressive.entity.Transactions;
 
-public class TransactionServiceImpl implements TransactionService {
+public class TransactionServiceImpl implements TransactionService{
+
     private TransactionDAO transactionDAO;
+    
+    
 
     public TransactionServiceImpl(TransactionDAO transactionDAO) {
         this.transactionDAO = transactionDAO;
@@ -47,7 +43,7 @@ public class TransactionServiceImpl implements TransactionService {
 
     @Override
     public List<Transactions> getTransactionsByCustomerId(int customerId) throws SQLException {
-        // TODO Auto-generated method stub
         return null;
     }
+    
 }

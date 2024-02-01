@@ -1,213 +1,179 @@
 package com.wecp.progressive.dao;
 
-import com.wecp.progressive.config.DatabaseConnectionManager;
-import com.wecp.progressive.dto.CustomerAccountInfo;
-import com.wecp.progressive.entity.Customers;
-
-
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-
 import java.util.ArrayList;
 import java.util.List;
 
-import org.springframework.stereotype.Repository;
-// @Repository
+import com.wecp.progressive.config.DatabaseConnectionManager;
+import com.wecp.progressive.dto.CustomerAccountInfo;
+import com.wecp.progressive.entity.Customers;
+
 public class CustomerDAOImpl implements CustomerDAO {
 
-
     @Override
-    public List<Customers> getAllCustomers() throws SQLException {
-         List<Customers> customers = new ArrayList<>();
+    public int addCustomer(Customers customers) throws SQLException {
 
-         Connection connection = null;
-         PreparedStatement statement = null;
-         ResultSet resultSet = null;
+        int generatedKey = -1;
 
-         try {
-             connection = DatabaseConnectionManager.getConnection();
-             String sql = "SELECT * FROM customers";
-             statement = connection.prepareStatement(sql);
-             resultSet = statement.executeQuery();
+        Connection connection = DatabaseConnectionManager.getConnection();
 
-             while (resultSet.next()) {
-                 int customerId = resultSet.getInt("customer_id");
-                 String name = resultSet.getString("name");
-                 String email = resultSet.getString("email");
-                 String username = resultSet.getString("username");
-                 String password = resultSet.getString("password");
+        String sql = "INSERT INTO customers (name, email,username, password) VALUES (?, ?, ?, ?)";
+        try (PreparedStatement statement = connection.prepareStatement(sql, PreparedStatement.RETURN_GENERATED_KEYS)) {
+            statement.setString(1, customers.getName());
+            statement.setString(2, customers.getEmail());
+            statement.setString(3, customers.getUsername());
+            statement.setString(4, customers.getPassword());
 
-                 customers.add(new Customers(customerId, name, email, username, password));
-             }
-         } catch (SQLException e) {
-             e.printStackTrace();
-             throw e; // Rethrow the exception
-         } finally {
-             if (connection != null) {
-                 connection.close();
-             }
-         }
+            statement.executeUpdate();
 
-         return customers;
+            ResultSet resultSet = statement.getGeneratedKeys();
+
+            if (resultSet.next()) {
+                generatedKey = resultSet.getInt(1);
+                customers.setCustomerId(generatedKey);
+            }
+        } finally {
+            if (connection != null) {
+                connection.close();
+            }
+        }
+        return generatedKey;
     }
 
     @Override
     public Customers getCustomerById(int customerId) throws SQLException {
-         Connection connection = null;
-         PreparedStatement statement = null;
-         ResultSet resultSet = null;
 
-         try {
-             connection = DatabaseConnectionManager.getConnection();
-             String sql = "SELECT * FROM customers WHERE customer_id = ?";
-             statement = connection.prepareStatement(sql);
-             statement.setInt(1, customerId);
-             resultSet = statement.executeQuery();
+        Customers customer = null;
+        Connection connection = DatabaseConnectionManager.getConnection();
 
-             if (resultSet.next()) {
-                 String name = resultSet.getString("name");
+        String sql = "SELECT * FROM customers WHERE customer_id = ?";
+        try (PreparedStatement statement = connection.prepareStatement(sql)) {
+            statement.setInt(1, customerId);
+            ResultSet resultSet = statement.executeQuery();
+
+            if(resultSet.next()){
+                String name = resultSet.getString("name");
                  String email = resultSet.getString("email");
                  String username = resultSet.getString("username");
                  String password = resultSet.getString("password");
 
-                 return new Customers(customerId, name, email,username, password);
-             }
-         } catch (SQLException e) {
-             e.printStackTrace();
-             throw e; // Rethrow the exception
-         } finally {
-             if (connection != null) {
-                 connection.close();
-             }
-         }
-         return  null;
-    }
+                 customer = new Customers(customerId, name, email, username, password);
+            }
+        } finally {
+            if(connection != null){
+                connection.close();
+            }
+        }
 
-    @Override
-    public int addCustomer(Customers customers) throws SQLException {
-         Connection connection = null;
-         PreparedStatement statement = null;
-         int generatedID = -1;
-
-         try {
-             connection = DatabaseConnectionManager.getConnection();
-             String sql = "INSERT INTO customers (name, email,username, password) VALUES (?, ?, ?, ?)";
-             statement = connection.prepareStatement(sql,  PreparedStatement.RETURN_GENERATED_KEYS);
-             statement.setString(1, customers.getName());
-             statement.setString(2, customers.getEmail());
-             statement.setString(3, customers.getUsername());
-             statement.setString(4, customers.getPassword());
-             statement.executeUpdate();
-             ResultSet generatedKeys = statement.getGeneratedKeys();
-                 if (generatedKeys.next()) {
-                     generatedID = generatedKeys.getInt(1);
-                     customers.setCustomerId(generatedID);
-                 }
-         } catch (SQLException e) {
-             e.printStackTrace();
-             throw e; // Rethrow the exception
-         } finally {
-             if (connection != null) {
-                 connection.close();
-             }
-         }
-        return generatedID;
+        return customer;
     }
 
     @Override
     public void updateCustomer(Customers customers) throws SQLException {
-         Connection connection = null;
-         PreparedStatement statement = null;
 
-         try {
-             connection = DatabaseConnectionManager.getConnection();
-             String sql = "UPDATE customers SET name = ?, email = ?, username= ?, password =? WHERE customer_id = ?";
-             statement = connection.prepareStatement(sql);
-             statement.setString(1, customers.getName());
-             statement.setString(2, customers.getEmail());
-             statement.setString(3, customers.getUsername());
-             statement.setString(4, customers.getPassword());
-             statement.setInt(5, customers.getCustomerId());
-             statement.executeUpdate();
-         } catch (SQLException e) {
-             e.printStackTrace();
-             throw e; // Rethrow the exception
-         } finally {
-             if (connection != null) {
-                 connection.close();
-             }
-         }
+        Connection connection = DatabaseConnectionManager.getConnection();
+
+        String sql = "UPDATE customers SET name = ?, email = ?, username= ?, password =? WHERE customer_id = ?";
+        try (PreparedStatement statement = connection.prepareStatement(sql)) {
+            statement.setString(1, customers.getName());
+            statement.setString(2, customers.getEmail());
+            statement.setString(3, customers.getUsername());
+            statement.setString(4, customers.getPassword());
+            statement.setInt(5, customers.getCustomerId());
+
+            statement.executeUpdate();
+
+        } finally {
+            if(connection != null){
+                connection.close();
+            }
+        }
     }
 
     @Override
     public void deleteCustomer(int customerId) throws SQLException {
-         Connection connection = null;
-         PreparedStatement statement = null;
+        Connection connection = DatabaseConnectionManager.getConnection();
 
-         try {
-             connection = DatabaseConnectionManager.getConnection();
-             String sql = "DELETE FROM customers WHERE customer_id = ?";
-             statement = connection.prepareStatement(sql);
-             statement.setInt(1, customerId);
-             statement.executeUpdate();
-         } catch (SQLException e) {
-             e.printStackTrace();
-             throw e; // Rethrow the exception
-         } finally {
-             // Close resources in the reverse order of opening
-             if (statement != null) {
-                 statement.close();
-             }
-             if (connection != null) {
-                 connection.close();
-             }
-         }
+        String sql = "DELETE FROM customers WHERE customer_id = ?";
+        try (PreparedStatement statement = connection.prepareStatement(sql)) {
+            statement.setInt(1, customerId);
+
+            statement.executeUpdate();
+            
+        } finally {
+            if(connection != null){
+                connection.close();
+            }
+        }
+    }
+
+    @Override
+    public List<Customers> getAllCustomers() throws SQLException {
+        List<Customers> customersList = new ArrayList<Customers>();
+
+        Connection connection = DatabaseConnectionManager.getConnection();
+
+        String sql = "SELECT * FROM customers";
+        try (PreparedStatement statement = connection.prepareStatement(sql)) {
+            ResultSet resultSet = statement.executeQuery();
+
+            while (resultSet.next()) {
+                int customerId = resultSet.getInt("customer_id");
+                String name = resultSet.getString("name");
+                String email = resultSet.getString("email");
+                String username = resultSet.getString("username");
+                String password = resultSet.getString("password");
+
+                Customers customers = new Customers(customerId, name, email, username, password);
+                customersList.add(customers);
+            }
+        } finally {
+            if(connection != null){
+                connection.close();
+            }
+        }
+
+        return customersList;
     }
 
     @Override
     public CustomerAccountInfo getCustomerAccountInfo(int customerId) throws SQLException {
-         CustomerAccountInfo customerAccountInfo = null;
-         Connection connection = null;
-         PreparedStatement statement = null;
-         ResultSet resultSet = null;
+        CustomerAccountInfo customerAccountInfo = null;
+        Connection connection = DatabaseConnectionManager.getConnection();
 
-         try {
-             connection = DatabaseConnectionManager.getConnection();
-             String sql = "SELECT c.customer_id, c.name AS customer_name, c.email, a.account_id, a.balance " +
+        //CustomerAccountInfo details are collected from both customers and accounts table
+        String sql = "SELECT c.customer_id, c.name AS customer_name, c.email, a.account_id, a.balance " +
                      "FROM customers c " +
                      "INNER JOIN accounts a ON c.customer_id = a.customer_id " +
                      "WHERE c.customer_id = ?";
-             statement = connection.prepareStatement(sql);
-             statement.setInt(1, customerId);
-             resultSet = statement.executeQuery();
+         
+        try (PreparedStatement statement =  connection.prepareStatement(sql)) {
+             
+            statement.setInt(1, customerId);
+            ResultSet resultSet = statement.executeQuery();
 
-             if (resultSet.next()) {
-                 String customerName = resultSet.getString("customer_name");
-                 String email = resultSet.getString("email");
-                 int accountId = resultSet.getInt("account_id");
-                 double balance = resultSet.getDouble("balance");
+            if (resultSet.next()) {
+                String customerName = resultSet.getString("customer_name");
+                String email = resultSet.getString("email");
+                int accountId = resultSet.getInt("account_id");
+                double balance = resultSet.getDouble("balance");
 
-                 customerAccountInfo = new CustomerAccountInfo(customerId, customerName, email, accountId, balance);
-             }
-         } catch (SQLException e) {
-             e.printStackTrace();
-             throw e; // Rethrow the exception
-         } finally {
-             // Close resources in the reverse order of opening
-             if (resultSet != null) {
-                 resultSet.close();
-             }
-             if (statement != null) {
-                 statement.close();
-             }
-             if (connection != null) {
-                 connection.close();
-             }
-         }
+                customerAccountInfo = new CustomerAccountInfo(customerId, customerName, email, accountId, balance);
+            }
 
-        return null;
+            if (resultSet != null) {
+                resultSet.close();
+            }
+        }  finally {
+            if (connection != null) {
+                connection.close();
+            }
+        }
+        return customerAccountInfo;
     }
+
 
 }
