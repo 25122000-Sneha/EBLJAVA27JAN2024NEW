@@ -6,14 +6,14 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 
-
+@Entity
 public class Accounts implements Comparable<Accounts> {
 
-    
-    
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int accountId;
 
-    
+    @ManyToOne
     private Customers customer;
     private double balance;
 

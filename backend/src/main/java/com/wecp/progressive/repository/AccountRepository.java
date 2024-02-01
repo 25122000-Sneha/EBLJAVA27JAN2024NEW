@@ -9,6 +9,7 @@ import java.util.List;
 
 
 @Repository
-public interface AccountRepository {
-    
+public interface AccountRepository extends JpaRepository<Accounts, Integer>{
+    List<Accounts> findByCustomerCustomerId(int customerId);
+    List<Accounts> findByOrderByBalance();
 }

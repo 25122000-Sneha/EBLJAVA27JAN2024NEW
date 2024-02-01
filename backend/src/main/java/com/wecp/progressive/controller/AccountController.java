@@ -12,26 +12,29 @@ import java.sql.SQLException;
 import java.util.List;
 
 
-
+@RestController
+@RequestMapping("/accounts")
 public class AccountController {
 
-    
-    
+    @Autowired
+    AccountService accountService;
+
+    @GetMapping
     public ResponseEntity<List<Accounts>> getAllAccounts() throws SQLException {
-        return null;
+        return new ResponseEntity<List<Accounts>>(accountService.getAllAccounts(), HttpStatus.OK);
     }
 
-
+    @GetMapping("/{accountId}")
     public ResponseEntity<Accounts> getAccountById(@PathVariable int accountId) throws SQLException {
-        return null;
+        return new ResponseEntity<Accounts>(accountService.getAccountById(accountId), HttpStatus.OK);
     }
-   
+    @GetMapping("/user/{param}")
     public ResponseEntity<List<Accounts>> getAccountsByUser(@PathVariable String param) throws NumberFormatException, SQLException {
-       return null;
+        return new ResponseEntity<List<Accounts>>(accountService.getAccountsByUser(Integer.parseInt(param)), HttpStatus.OK);
     }
-   
+    @PostMapping
     public ResponseEntity<Integer> addAccount(@RequestBody Accounts accounts) throws SQLException {
-        return null;
+        return new ResponseEntity<Integer>(accountService.addAccount(accounts), HttpStatus.CREATED);
     }
     
     public ResponseEntity<Void> updateAccount(int accountId, Accounts accounts) {

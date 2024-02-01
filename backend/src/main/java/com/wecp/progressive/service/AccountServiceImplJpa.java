@@ -25,22 +25,22 @@ public class AccountServiceImplJpa implements AccountService {
 
     @Override
     public List<Accounts> getAllAccounts() throws SQLException {
-        return null;
+        return accountRepository.findAll();
     }
 
     @Override
     public List<Accounts> getAccountsByUser(int userId) throws SQLException {
-        return null;
+        return accountRepository.findByCustomerCustomerId(userId);
     }
 
     @Override
     public Accounts getAccountById(int accountId) throws SQLException {
-        return null;
+        return accountRepository.findById(accountId).get();
     }
 
     @Override
     public int addAccount(Accounts accounts) throws SQLException {
-        return -1;
+        return accountRepository.save(accounts).getAccountId();
     }
 
     @Override
@@ -59,7 +59,7 @@ public class AccountServiceImplJpa implements AccountService {
     public List<Accounts> getAllAccountsSortedByBalance() throws SQLException {
         // List<Accounts> accounts = accountRepository.findAll();
         // Collections.sort(accounts);
-        return null;
+        return accountRepository.findByOrderByBalance();
     }
 
     @Override

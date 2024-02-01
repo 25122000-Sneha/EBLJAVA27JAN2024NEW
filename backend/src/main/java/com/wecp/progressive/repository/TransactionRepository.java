@@ -6,5 +6,5 @@ import org.springframework.stereotype.Repository;
 import com.wecp.progressive.entity.Transactions;
 
 @Repository
-public interface TransactionRepository {
+public interface TransactionRepository  extends JpaRepository<Transactions, Integer>{
 }
