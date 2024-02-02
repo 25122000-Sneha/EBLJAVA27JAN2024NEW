@@ -18,28 +18,31 @@ public class CreditCardController {
     @Autowired
     private CreditCardService creditCardService;
 
-    
+    @GetMapping
     public ResponseEntity<List<CreditCard>> getAllCreditCards() {
-        return null;
+        return new ResponseEntity<List<CreditCard>>(creditCardService.getAllCreditCards(), HttpStatus.OK);
     }
 
-    
+    @GetMapping("/{id}")
     public ResponseEntity<CreditCard> getCreditCardById(@PathVariable Long id) {
-       return null;
+        return new ResponseEntity<CreditCard>(creditCardService.getCreditCardById(id), HttpStatus.OK);
     }
 
-   
+    @PostMapping
     public ResponseEntity<CreditCard> createCreditCard(@RequestBody CreditCard creditCard) {
-        return null;
+        return new ResponseEntity<CreditCard>(creditCardService.createCreditCard(creditCard), HttpStatus.CREATED);
     }
 
-  
+    @PutMapping("/{id}")
     public ResponseEntity<Void> updateCreditCard(@PathVariable Long id, @RequestBody CreditCard creditCard) {
-        return null;
+        creditCard.setId(id);
+        creditCardService.updateCreditCard(creditCard);
+        return new ResponseEntity<Void>(HttpStatus.OK);
     }
 
-    
+    @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteCreditCard(@PathVariable Long id) {
-        return null;
+        creditCardService.deleteCreditCard(id);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 }
