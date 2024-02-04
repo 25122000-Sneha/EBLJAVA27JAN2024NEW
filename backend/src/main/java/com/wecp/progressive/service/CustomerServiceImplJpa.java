@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.wecp.progressive.entity.Customers;
+import com.wecp.progressive.exception.CustomerAlreadyExistsException;
 import com.wecp.progressive.repository.CustomerRepository;
 
 @Service
@@ -37,7 +38,11 @@ public class CustomerServiceImplJpa implements CustomerService {
     }
 
     @Override
-    public int addCustomer(Customers customers) throws SQLException {
+    public int addCustomer(Customers customers) {
+        Customers customers1 = customerRepository.findByNameAndEmail(customers.getName(), customers.getEmail());
+        if (customers1 != null) {
+            throw new CustomerAlreadyExistsException("Customer already exists");
+        }
         return customerRepository.save(customers).getCustomerId();
     }
 
